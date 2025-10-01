@@ -8,10 +8,10 @@ Owl Library Management is a Java-based application for managing books and member
 ### Completed
 - Add a new book (title, author, ISBN)
 - View all books
-
-### In Progress / Planned
 - Search books by title or author
 - Remove a book
+
+### In Progress / Planned
 - Track book availability (borrowed or not)
 - Register new member (name, member ID)
 - View all registered members
