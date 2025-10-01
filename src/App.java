@@ -13,33 +13,55 @@ public class App {
         BookObject book = new BookObject("Mindset", "Carol S. Dweck", "Educational");
         BookObject book2 = new BookObject("Test", "Test", "test");
         
-        // Add books to list
+        // Add books to list 
         books.add(book);
         books.add(book2);
-      
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a book name");
-        String name = sc.next();
-
-        Pattern pattern = Pattern.compile("\\b" + name + "\\b", Pattern.CASE_INSENSITIVE);
+        
+        // Gets user input from console
+        Scanner sc = new Scanner(System.in); System.out.println("Enter a book name to search.");
+        String name = sc.next(); System.out.println("Enter a book name to delete."); 
+        String dName = sc.next();
+        
+        // Pattern searching for finding books and deleting them
+        Pattern searchPattern = Pattern.compile("\\b" + name + "\\b", Pattern.CASE_INSENSITIVE);
+        Pattern deletePattern = Pattern.compile("\\b" + dName + "\\b", Pattern.CASE_INSENSITIVE);
+        
+        // For if statements
         boolean found = false;
+        boolean dFound = false;
         
         // Loop through list and adds book info to lists
-        for (BookObject iBook : books) {
+        java.util.Iterator<BookObject> iterator = books.iterator();
+        while (iterator.hasNext()) {
+            BookObject iBook = iterator.next();
             String bookName = iBook.getName();
             String bookAuthor = iBook.getAuthor();
             String bookSubject = iBook.getSubject();
 
-            Matcher matcher = pattern.matcher(bookName);
-            while (matcher.find()) {
-                System.out.println("Found book: " + matcher.group() + " by " + bookAuthor + ", subject " + bookSubject);
+            Matcher searchMatcher = searchPattern.matcher(bookName);
+            while (searchMatcher.find()) {
+                System.out.println("Found book: " + searchMatcher.group() + " by " + bookAuthor + ", subject " + bookSubject);
                 found = true;
+            }
+            
+            Matcher deleteMatcher = deletePattern.matcher(bookName);
+            while (deleteMatcher.find()) {
+                System.out.println("Deleting book: " + deleteMatcher.group() + " by " + bookAuthor + ", subject " + bookSubject);
+                iterator.remove();
+                dFound = true;
             }
         }
         
         if (!found) {
             System.out.println("No matching book found.");
         }
+
+        if (!dFound) {
+            System.out.println("No matching book found for deletion.");
+        }
+
+        // Debug printing
+        System.out.println(books);
 
         // Prints to console for testing
         sc.close();
