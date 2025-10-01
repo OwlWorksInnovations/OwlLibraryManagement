@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
@@ -11,7 +12,7 @@ public class App {
 
         // Adding books
         BookObject book = new BookObject("Mindset", "Carol S. Dweck", "Educational");
-        BookObject book2 = new BookObject("Test", "te S. Dweck", "test");
+        BookObject book2 = new BookObject("Test", "Test", "test");
         
         // Add books to list
         books.add(book);
@@ -27,13 +28,32 @@ public class App {
             booksAuthors.add(bookAuthor);
             booksSubjects.add(bookSubject);
         }
+        
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a book name");
+        String name = sc.next();
+        
+        boolean found = false;
+        for (String iBookName : booksNames) {
+            found = iBookName.contains(name);
+            if (found) {
+                break;
+            }
+        }
 
         // Prints to console for testing
         System.out.println("Books names: " + booksNames + " authors " + booksAuthors + " subjects " + booksSubjects);
+
+        if (found) {
+            System.out.println(name);
+        } else {
+            System.out.println("Could not find a book.");
+        }
+        sc.close();
     }
 }
 
-// Book class
+// Book object
 class BookObject {
     private String name;
     private String author;

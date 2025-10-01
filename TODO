@@ -2,7 +2,7 @@
 Todo:
 	✔ Add a new book (title, author, ISBN) @started(25-09-30 16:26) @done(25-09-30 16:49) @lasted(23m17s)
 	✔ View all books @started(25-09-30 18:19) @done(25-09-30 18:40) @lasted(21m23s)
-	☐ Search books by title or author
+	✔ Search books by title or author @started(25-10-01 08:47) @done(25-10-01 09:13) @lasted(26m30s)
 	☐ Remove a book
 	☐ Track book availability (borrowed or not)
 	☐ Register new member (name, member ID)
