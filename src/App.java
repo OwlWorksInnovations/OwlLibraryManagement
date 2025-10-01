@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
     public static void main(String[] args) {
@@ -33,22 +35,21 @@ public class App {
         System.out.println("Enter a book name");
         String name = sc.next();
         
+        Pattern pattern = Pattern.compile("\\b" + name + "\\b", Pattern.CASE_INSENSITIVE);
         boolean found = false;
         for (String iBookName : booksNames) {
-            found = iBookName.contains(name);
-            if (found) {
-                break;
+            Matcher matcher = pattern.matcher(iBookName);
+            while (matcher.find()) {
+                System.out.println("Found book: " + matcher.group());
+                found = true;
             }
+        }
+        if (!found) {
+            System.out.println("No matching book found.");
         }
 
         // Prints to console for testing
         System.out.println("Books names: " + booksNames + " authors " + booksAuthors + " subjects " + booksSubjects);
-
-        if (found) {
-            System.out.println(name);
-        } else {
-            System.out.println("Could not find a book.");
-        }
         sc.close();
     }
 }
