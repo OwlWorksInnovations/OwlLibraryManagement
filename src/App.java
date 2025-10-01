@@ -8,9 +8,6 @@ public class App {
     public static void main(String[] args) {
         // Lists
         List<BookObject> books = new ArrayList<BookObject>();
-        List<String> booksNames = new ArrayList<String>();
-        List<String> booksAuthors = new ArrayList<String>();
-        List<String> booksSubjects = new ArrayList<String>();
 
         // Adding books
         BookObject book = new BookObject("Mindset", "Carol S. Dweck", "Educational");
@@ -19,6 +16,13 @@ public class App {
         // Add books to list
         books.add(book);
         books.add(book2);
+      
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a book name");
+        String name = sc.next();
+
+        Pattern pattern = Pattern.compile("\\b" + name + "\\b", Pattern.CASE_INSENSITIVE);
+        boolean found = false;
         
         // Loop through list and adds book info to lists
         for (BookObject iBook : books) {
@@ -26,30 +30,18 @@ public class App {
             String bookAuthor = iBook.getAuthor();
             String bookSubject = iBook.getSubject();
 
-            booksNames.add(bookName);
-            booksAuthors.add(bookAuthor);
-            booksSubjects.add(bookSubject);
-        }
-        
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a book name");
-        String name = sc.next();
-        
-        Pattern pattern = Pattern.compile("\\b" + name + "\\b", Pattern.CASE_INSENSITIVE);
-        boolean found = false;
-        for (String iBookName : booksNames) {
-            Matcher matcher = pattern.matcher(iBookName);
+            Matcher matcher = pattern.matcher(bookName);
             while (matcher.find()) {
-                System.out.println("Found book: " + matcher.group());
+                System.out.println("Found book: " + matcher.group() + " by " + bookAuthor + ", subject " + bookSubject);
                 found = true;
             }
         }
+        
         if (!found) {
             System.out.println("No matching book found.");
         }
 
         // Prints to console for testing
-        System.out.println("Books names: " + booksNames + " authors " + booksAuthors + " subjects " + booksSubjects);
         sc.close();
     }
 }
