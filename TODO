@@ -6,12 +6,12 @@ Todo:
 	✔ Remove a book @started(25-10-01 10:34) @done(25-10-01 11:10) @lasted(36m0s)
 	✔ Option menu (add book, view books, delete book) @started(25-10-01 11:56) @done(25-10-01 12:36) @lasted(40m21s)
 	✔ Track book availability (borrowed or not) @started(25-10-01 19:45) @done(25-10-01 20:37) @lasted(52m28s)
-	☐ Register new member (name, member ID)
-	☐ View all registered members
-	☐ Assign borrowed books to a member
-	☐ Borrow a book (if available)
-	☐ Return a borrowed book
-	☐ Prevent borrowing if the book is already borrowed
+	✔ Borrow a book (if available) @started(25-10-01 19:45) @done(25-10-01 20:37) @lasted(52m28s)
+	✔ Register new member (name, member ID) @started(25-10-02 09:22) @done(25-10-02 10:34) @lasted(1h12m2s)
+	☐ View all registered members @started(25-10-02 10:35)
+	☐ Assign borrowed books to a member @started(25-10-02 10:35)
+	☐ Return a borrowed book @started(25-10-02 10:35)
+	☐ Prevent borrowing if the book is already borrowed @started(25-10-02 10:35)
 	☐ Save books and members to file
 	☐ Load books and members from file on startup
 	☐ Menu system for navigating features

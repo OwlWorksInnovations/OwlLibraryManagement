@@ -1,0 +1,11 @@
+> Log in > Username > Password
+> Register > Username > Password
+> List users > Users
+> Exit
+
+-----------------------------------------------
+
+> Borrow book > Search book, List books > Select book
+> Return book > Search my book, List my books > Select book
+> Add book > Book name > Book author > Book subject
+> Exit
