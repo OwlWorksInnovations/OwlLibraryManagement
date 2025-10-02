@@ -34,7 +34,7 @@ public class App {
                         running = exitProgram();
                         break;
                     default:
-                        System.out.println("Invaid choice or input!");
+                        System.out.println("Invalid choice or input!");
                 }
             } else if (loggedin) {
                 displayLibraryMenu();
@@ -133,9 +133,18 @@ public class App {
     }
 
     private static void borrowBook() {
+        String selectedBookInfo;
+        if (selectedBook != null) {
+            selectedBookInfo = selectedBook.getName() + " by " + selectedBook.getAuthor();
+        } else {
+            selectedBookInfo = "None";
+        }
+
         System.out.println("\nChoose a menu option:");
         System.out.println("[1] Search book");
         System.out.println("[2] List books");
+        System.out.println("[3] Borrow selected book");
+        System.out.println("Selected book: " + selectedBookInfo);
         System.out.print("> ");
         Integer choice = getIntInput();
 
@@ -145,8 +154,22 @@ public class App {
                 break;
             case 2:
                 listBooks();
+                break;
+            case 3:
+                if (selectedBook != null) {
+                    if (!selectedBook.getBorrowed()) {
+                        currentUser.addBorrowedBook(selectedBook);
+                        selectedBook.setBorrowed(true);
+                        System.out.println("Book borrowed: " + selectedBook.getBorrowed() + ", " + selectedBook + ", " + currentUser.getBorrowedBooks());
+                    } else {
+                        System.out.println("Book is already borrowed!");
+                    }
+                } else {
+                    System.out.println("No book selected!");
+                }
+                break;
             default:
-                System.out.println("Invaid choice or input!");
+                System.out.println("Invalid choice or input!");
         }
     }
 
@@ -196,7 +219,7 @@ public class App {
                 case 2:
                     break;
                 default:
-                    System.out.println("Invaild choice or input!");
+                    System.out.println("Invalid choice or input!");
             }
         }
     }
@@ -267,9 +290,18 @@ public class App {
     }
 
     private static void returnBook() {
+        String selectedBookInfo;
+        if (selectedBook != null) {
+            selectedBookInfo = selectedBook.getName() + " by " + selectedBook.getAuthor();
+        } else {
+            selectedBookInfo = "None";
+        }
+
         System.out.println("\nChoose a menu option:");
         System.out.println("[1] Search book");
         System.out.println("[2] List books");
+        System.out.println("[3] Return selected book");
+        System.out.println("Selected book: " + selectedBookInfo);
         System.out.print("> ");
         Integer choice = getIntInput();
 
@@ -279,8 +311,23 @@ public class App {
                 break;
             case 2:
                 listBooks();
+                break;
+            case 3:
+                if (selectedBook != null) {
+                    List<BookObject> borrowedBooks = currentUser.getBorrowedBooks();
+                    if (borrowedBooks.contains(selectedBook)) {
+                        currentUser.removeBorrowedBook(selectedBook);
+                        selectedBook.setBorrowed(false);
+                        System.out.println("Book returned: " + selectedBook.getBorrowed() + ", " + currentUser.getBorrowedBooks() + ", " + selectedBook);
+                    } else {
+                        System.out.println("Book is not being borrowed!");
+                    }
+                } else {
+                    System.out.println("No book selected!");
+                }
+                break;
             default:
-                System.out.println("Invaid choice or input!");
+                System.out.println("Invalid choice or input!");
         }
     }
 

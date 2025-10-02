@@ -8,10 +8,10 @@ Todo:
 	✔ Track book availability (borrowed or not) @started(25-10-01 19:45) @done(25-10-01 20:37) @lasted(52m28s)
 	✔ Borrow a book (if available) @started(25-10-01 19:45) @done(25-10-01 20:37) @lasted(52m28s)
 	✔ Register new member (name, member ID) @started(25-10-02 09:22) @done(25-10-02 10:34) @lasted(1h12m2s)
-	☐ View all registered members @started(25-10-02 10:35)
-	☐ Assign borrowed books to a member @started(25-10-02 10:35)
-	☐ Return a borrowed book @started(25-10-02 10:35)
-	☐ Prevent borrowing if the book is already borrowed @started(25-10-02 10:35)
+	✔ View all registered members @started(25-10-02 10:35) @done(25-10-02 11:25) @lasted(50m50s)
+	✔ Assign borrowed books to a member @started(25-10-02 10:35) @done(25-10-02 11:25) @lasted(50m54s)
+	✔ Return a borrowed book @started(25-10-02 10:35) @done(25-10-02 11:25) @lasted(50m56s)
+	✔ Prevent borrowing if the book is already borrowed @started(25-10-02 10:35) @done(25-10-02 11:31) @lasted(56m13s)
 	☐ Save books and members to file
 	☐ Load books and members from file on startup
 	☐ Menu system for navigating features
