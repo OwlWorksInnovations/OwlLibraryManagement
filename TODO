@@ -12,11 +12,10 @@ Todo:
 	✔ Assign borrowed books to a member @started(25-10-02 10:35) @done(25-10-02 11:25) @lasted(50m54s)
 	✔ Return a borrowed book @started(25-10-02 10:35) @done(25-10-02 11:25) @lasted(50m56s)
 	✔ Prevent borrowing if the book is already borrowed @started(25-10-02 10:35) @done(25-10-02 11:31) @lasted(56m13s)
-	☐ Save books and members to file
-	☐ Load books and members from file on startup
-	☐ Menu system for navigating features
-	☐ Handle user input and provide feedback
-	☐ Validate inputs and handle errors gracefully
+	✔ Save books and members to file @started(25-10-03 11:10) @done(25-10-03 11:19) @lasted(9m45s)
+	✔ Load books and members from file on startup @started(25-10-03 11:19) @done(25-10-03 11:29) @lasted(10m34s)
+	✔ Handle user input and provide feedback @started(25-10-03 11:30) @done(25-10-03 11:30) @lasted(25s)
+	✔ Validate inputs and handle errors gracefully @started(25-10-03 11:30) @done(25-10-03 11:30) @lasted(30s)
 	☐ Auto-generate unique IDs for books and members
 	☐ Track due dates or borrowing history
 	☐ Admin/member roles (e.g., login system)

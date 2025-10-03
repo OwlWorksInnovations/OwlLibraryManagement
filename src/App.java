@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +16,24 @@ public class App {
     private static BookObject selectedBook = null;
     private static Boolean loggedin = false;
     public static void main(String[] args) {
+        File userFile = new File("users.txt");
+        try (Scanner userScanner = new Scanner(userFile)) {
+            while (userScanner.hasNextLine()) {
+                String data = userScanner.nextLine();
+                String[] tokens = data.split(",");
+                String username = tokens[0];
+                String password = tokens[1];
+
+                UserObject user = new UserObject(username, password, null);
+                users.add(user);
+
+                System.out.println(data);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         Boolean running = true;
 
         while (running) {
@@ -123,7 +145,26 @@ public class App {
         String password = sc.nextLine();
         UserObject user = new UserObject(username, password, null);
 
-        users.add(user);
+        try {
+            File usersFile = new File("users.txt");
+            if (usersFile.createNewFile()) {
+                System.out.println("File created: " + usersFile.getName());
+
+                FileWriter usersFileWriter = new FileWriter(usersFile.getName(), true);
+                usersFileWriter.write(username + "," + password + "\n");
+                usersFileWriter.close();
+                users.add(user);
+            } else {
+                FileWriter usersFileWriter = new FileWriter(usersFile.getName(), true);
+                System.out.println("File already exists.");
+                usersFileWriter.write(username + "," + password + "\n");
+                usersFileWriter.close();
+                users.add(user);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occured!");
+            e.printStackTrace();
+        }  
     }
 
     private static void listUsers() {

@@ -18,13 +18,12 @@ Owl Library Management is a Java-based application for managing books and member
 - Assign borrowed books to a member
 - Return a borrowed book
 - Prevent borrowing if the book is already borrowed
-
-### In Progress / Planned
 - Save books and members to file
 - Load books and members from file on startup
-- Menu system for navigating features
-- Handle user input and provide feedback
 - Validate inputs and handle errors gracefully
+- Handle user input and provide feedback
+
+### In Progress / Planned
 - Auto-generate unique IDs for books and members
 - Track due dates or borrowing history
 - Admin/member roles (e.g., login system)
