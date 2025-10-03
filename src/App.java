@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,8 +24,9 @@ public class App {
                 String[] tokens = data.split(",");
                 String username = tokens[0];
                 String password = tokens[1];
+                String uuidString = tokens[2];
 
-                UserObject user = new UserObject(username, password, null);
+                UserObject user = new UserObject(username, password, uuidString, null);
                 users.add(user);
 
                 System.out.println(data);
@@ -143,7 +145,10 @@ public class App {
         System.out.println("\nEnter password:");
         System.out.print("> ");
         String password = sc.nextLine();
-        UserObject user = new UserObject(username, password, null);
+
+        UUID uuid = UUID.randomUUID();
+        String uuidString = uuid.toString();
+        UserObject user = new UserObject(username, password, uuidString, null);
 
         try {
             File usersFile = new File("users.txt");
@@ -151,13 +156,13 @@ public class App {
                 System.out.println("File created: " + usersFile.getName());
 
                 FileWriter usersFileWriter = new FileWriter(usersFile.getName(), true);
-                usersFileWriter.write(username + "," + password + "\n");
+                usersFileWriter.write(username + "," + password + "," + uuidString + "\n");
                 usersFileWriter.close();
                 users.add(user);
             } else {
                 FileWriter usersFileWriter = new FileWriter(usersFile.getName(), true);
                 System.out.println("File already exists.");
-                usersFileWriter.write(username + "," + password + "\n");
+                usersFileWriter.write(username + "," + password + "," + uuidString + "\n");
                 usersFileWriter.close();
                 users.add(user);
             }
@@ -288,7 +293,7 @@ public class App {
                 
         // For if statements
         boolean dFound = false;
-                
+
         // Loop through list and finds book through pattern matching
         java.util.Iterator<BookObject> iterator = books.iterator();
         while (iterator.hasNext()) {
@@ -323,8 +328,11 @@ public class App {
         System.out.print("> ");
         String bookSubject = sc.nextLine();
 
+        UUID uuidBook = UUID.randomUUID();
+        String uuidBookString = uuidBook.toString();
+
         // Adding books
-        BookObject book = new BookObject(bookName, bookAuthor, bookSubject, false);
+        BookObject book = new BookObject(bookName, bookAuthor, bookSubject, uuidBookString, false);
 
         // Add books to list
         books.add(book);
@@ -383,11 +391,13 @@ public class App {
 class UserObject {
     private String username;
     private String password;
+    private String uuidString;
     private List<BookObject> borrowedBooks;
 
-    public UserObject(String username, String password, List<BookObject> borrowedBooks) {
+    public UserObject(String username, String password, String uuidString, List<BookObject> borrowedBooks) {
         this.username = username;
         this.password = password;
+        this.uuidString = uuidString;
         this.borrowedBooks = new ArrayList<>();
     }
 
@@ -397,6 +407,10 @@ class UserObject {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getUUID() {
+        return uuidString;
     }
 
     public List<BookObject> getBorrowedBooks() {
@@ -417,12 +431,14 @@ class BookObject {
     private String name;
     private String author;
     private String subject;
+    private String uuidBookString;
     private boolean borrowed;
     
-    public BookObject(String name, String author, String subject, boolean borrowed) {
+    public BookObject(String name, String author, String subject, String uuidBookString, boolean borrowed) {
         this.name = name;
         this.author = author;
         this.subject = subject;
+        this.uuidBookString = uuidBookString;
         this.borrowed = borrowed;
     }
 
@@ -436,6 +452,10 @@ class BookObject {
 
     public String getSubject() {
         return subject;
+    }
+
+    public String getUUID() {
+        return uuidBookString;
     }
 
     public boolean getBorrowed() {

@@ -16,7 +16,7 @@ Todo:
 	✔ Load books and members from file on startup @started(25-10-03 11:19) @done(25-10-03 11:29) @lasted(10m34s)
 	✔ Handle user input and provide feedback @started(25-10-03 11:30) @done(25-10-03 11:30) @lasted(25s)
 	✔ Validate inputs and handle errors gracefully @started(25-10-03 11:30) @done(25-10-03 11:30) @lasted(30s)
-	☐ Auto-generate unique IDs for books and members
+	✔ Auto-generate unique IDs for books and members @started(25-10-03 11:31) @done(25-10-03 11:55) @lasted(24m30s)
 	☐ Track due dates or borrowing history
 	☐ Admin/member roles (e.g., login system)
 	☐ Switch to GUI (JavaFX/Swing)
