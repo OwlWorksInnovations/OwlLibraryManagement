@@ -56,6 +56,43 @@ public class App {
             e.printStackTrace();
         }
 
+        
+        File borrowedFile = new File("borrowed.txt");
+        try (Scanner borrowedScanner = new Scanner(borrowedFile)) {
+            while (borrowedScanner.hasNextLine()) {
+                String data = borrowedScanner.nextLine();
+                String[] tokens = data.split(",");
+                String borrowedBookUUID = tokens[0];
+                String borrowingUserUUID = tokens[1];
+                BookObject borrowedBook = null;
+
+                for (BookObject book : books) {
+                    if (book.getUUID().equals(borrowedBookUUID)) {
+                        book.setBorrowed(true);
+                        borrowedBook = book;
+                    }
+                }
+
+                for (UserObject user : users) {
+                    if (user.getUUID().equals(borrowingUserUUID)) {
+                        List<BookObject> books = user.getBorrowedBooks();
+                        for (BookObject book : books) {
+                            if (book.equals(borrowedBook)) {
+                                return;
+                            } else {
+                                user.addBorrowedBook(borrowedBook);
+                            }
+                        }
+                    }
+                }
+
+                System.out.println(data);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         Boolean running = true;
 
         while (running) {
@@ -85,20 +122,12 @@ public class App {
                 Integer choice = getIntInput();
 
                 switch (choice) {
-                    case 1:
-                        borrowBook();
-                        break;
-                    case 2:
-                        returnBook();
-                        break;
-                    case 3:
-                        addBook();
-                        break;
-                    case 0:
-                        running = exitProgram();
-                        break;
-                    default:
-                        System.out.println("Invalid choice or input!");
+                    case 1 -> searchBook();
+                    case 2 -> borrowBook();
+                    case 3 -> returnBook();
+                    case 4 -> addBook();
+                    case 0 -> running = exitProgram();
+                    default -> System.out.println("Invalid choice!");
                 }
             }
         }
@@ -124,21 +153,20 @@ public class App {
     }
 
     private static void displayLibraryMenu() {
-        String selectedBookInfo;
-        if (selectedBook != null) {
-            selectedBookInfo = selectedBook.getName() + " by " + selectedBook.getAuthor();
-        } else {
-            selectedBookInfo = "None";
-        }
+        String selectedBookInfo = selectedBook != null
+            ? selectedBook.getName() + " by " + selectedBook.getAuthor()
+            : "None";
 
         System.out.println("\nChoose a menu option:");
-        System.out.println("[1] Borrow book");
-        System.out.println("[2] Return book");
-        System.out.println("[3] Add book");
+        System.out.println("[1] Select book");
+        System.out.println("[2] Borrow selected book");
+        System.out.println("[3] Return book");
+        System.out.println("[4] Add book");
         System.out.println("[0] Exit");
         System.out.println("Selected book: " + selectedBookInfo);
         System.out.print("> ");
     }
+
 
     private static void login() {
         System.out.println("\nEnter username:");
@@ -199,44 +227,25 @@ public class App {
     }
 
     private static void borrowBook() {
-        String selectedBookInfo;
-        if (selectedBook != null) {
-            selectedBookInfo = selectedBook.getName() + " by " + selectedBook.getAuthor();
-        } else {
-            selectedBookInfo = "None";
+        if (selectedBook == null) {
+            System.out.println("Select a book first.");
+            return;
+        }
+        if (selectedBook.getBorrowed()) {
+            System.out.println("Book already borrowed.");
+            return;
         }
 
-        System.out.println("\nChoose a menu option:");
-        System.out.println("[1] Search book");
-        System.out.println("[2] List books");
-        System.out.println("[3] Borrow selected book");
-        System.out.println("Selected book: " + selectedBookInfo);
-        System.out.print("> ");
-        Integer choice = getIntInput();
+        currentUser.addBorrowedBook(selectedBook);
+        selectedBook.setBorrowed(true);
 
-        switch (choice) {
-            case 1:
-                searchBook();
-                break;
-            case 2:
-                listBooks();
-                break;
-            case 3:
-                if (selectedBook != null) {
-                    if (!selectedBook.getBorrowed()) {
-                        currentUser.addBorrowedBook(selectedBook);
-                        selectedBook.setBorrowed(true);
-                        System.out.println("Book borrowed: " + selectedBook.getBorrowed() + ", " + selectedBook + ", " + currentUser.getBorrowedBooks());
-                    } else {
-                        System.out.println("Book is already borrowed!");
-                    }
-                } else {
-                    System.out.println("No book selected!");
-                }
-                break;
-            default:
-                System.out.println("Invalid choice or input!");
+        try (FileWriter writer = new FileWriter("borrowed.txt", true)) {
+            writer.write(selectedBook.getUUID() + "," + currentUser.getUUID() + "\n");
+        } catch (IOException e) {
+            System.out.println("Error writing borrowed.txt");
         }
+
+        System.out.println("Book borrowed: " + selectedBook.getName());
     }
 
     private static void searchBook() {
