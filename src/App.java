@@ -36,6 +36,26 @@ public class App {
             e.printStackTrace();
         }
 
+        File booksFile = new File("books.txt");
+        try (Scanner booksScanner = new Scanner(booksFile)) {
+            while (booksScanner.hasNextLine()) {
+                String data = booksScanner.nextLine();
+                String[] tokens = data.split(",");
+                String bookName = tokens[0];
+                String bookAuthor = tokens[1];
+                String bookSubject = tokens[2];
+                String bookUUID = tokens[3];
+
+                BookObject book = new BookObject(bookName, bookAuthor, bookSubject, bookUUID, false);
+                books.add(book);
+
+                System.out.println(data);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         Boolean running = true;
 
         while (running) {
@@ -169,7 +189,7 @@ public class App {
         } catch (IOException e) {
             System.out.println("An error occured!");
             e.printStackTrace();
-        }  
+        } 
     }
 
     private static void listUsers() {
@@ -333,6 +353,27 @@ public class App {
 
         // Adding books
         BookObject book = new BookObject(bookName, bookAuthor, bookSubject, uuidBookString, false);
+
+        try {
+            File booksFile = new File("books.txt");
+            if (booksFile.createNewFile()) {
+                System.out.println("File created: " + booksFile.getName());
+
+                FileWriter booksFileWriter = new FileWriter(booksFile.getName(), true);
+                booksFileWriter.write(bookName + "," + bookAuthor + "," + bookSubject + ',' + uuidBookString + "\n");
+                booksFileWriter.close();
+                books.add(book);
+            } else {
+                FileWriter booksFileWriter = new FileWriter(booksFile.getName(), true);
+                System.out.println("File already exists!");
+                booksFileWriter.write(bookName + "," + bookAuthor + "," + bookSubject + ',' + uuidBookString + "\n");
+                booksFileWriter.close();
+                books.add(book);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occured!");
+            e.printStackTrace();
+        }
 
         // Add books to list
         books.add(book);
