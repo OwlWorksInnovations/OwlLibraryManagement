@@ -26,7 +26,7 @@ public class App {
                 String password = tokens[1];
                 String uuidString = tokens[2];
 
-                UserObject user = new UserObject(username, password, uuidString, null);
+                UserObject user = new UserObject(username, password, uuidString, null, null);
                 users.add(user);
 
                 System.out.println(data);
@@ -55,7 +55,6 @@ public class App {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
         
         File borrowedFile = new File("borrowed.txt");
         try (Scanner borrowedScanner = new Scanner(borrowedFile)) {
@@ -93,6 +92,34 @@ public class App {
             e.printStackTrace();
         }
 
+
+        File borrowedHistoryFile = new File("borrowed_history.txt");
+        try (Scanner borrowedHistoryScanner = new Scanner(borrowedHistoryFile)) {
+            while (borrowedHistoryScanner.hasNextLine()) {
+                String data = borrowedHistoryScanner.nextLine();
+                String[] tokens = data.split(",");
+                String borrowedHistoryBookUUID = tokens[0];
+                String borrowingHistoryUserUUID = tokens[1];
+                BookObject borrowedHistoryBook = null;
+
+                for (UserObject user : users) {
+                    for (BookObject book : books) {
+                        if (book.getUUID().equals(borrowedHistoryBookUUID)) {
+                            borrowedHistoryBook = book;
+                        }
+                    }
+                    if (user.getUUID().equals(borrowingHistoryUserUUID)) {
+                        user.addBorrowedHistoryBook(borrowedHistoryBook);
+                    }
+                }
+
+                System.out.println(data);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
         Boolean running = true;
 
         while (running) {
@@ -102,20 +129,11 @@ public class App {
                 Integer choice = getIntInput();
 
                 switch (choice) {
-                    case 1:
-                        login();
-                        break;
-                    case 2:
-                        register();
-                        break;
-                    case 3:
-                        listUsers();
-                        break;
-                    case 0:
-                        running = exitProgram();
-                        break;
-                    default:
-                        System.out.println("Invalid choice or input!");
+                    case 1 -> login();
+                    case 2 -> register();
+                    case 3 -> listUsers();
+                    case 0 -> running = exitProgram();
+                    default -> System.out.println("Invalid choice or input!");
                 }
             } else if (loggedin) {
                 displayLibraryMenu();
@@ -126,6 +144,7 @@ public class App {
                     case 2 -> borrowBook();
                     case 3 -> returnBook();
                     case 4 -> addBook();
+                    case 5 -> bookHistory();
                     case 0 -> running = exitProgram();
                     default -> System.out.println("Invalid choice!");
                 }
@@ -162,6 +181,7 @@ public class App {
         System.out.println("[2] Borrow selected book");
         System.out.println("[3] Return book");
         System.out.println("[4] Add book");
+        System.out.println("[5] Show book history");
         System.out.println("[0] Exit");
         System.out.println("Selected book: " + selectedBookInfo);
         System.out.print("> ");
@@ -196,7 +216,7 @@ public class App {
 
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
-        UserObject user = new UserObject(username, password, uuidString, null);
+        UserObject user = new UserObject(username, password, uuidString, null , null);
 
         try {
             File usersFile = new File("users.txt");
@@ -243,6 +263,12 @@ public class App {
             writer.write(selectedBook.getUUID() + "," + currentUser.getUUID() + "\n");
         } catch (IOException e) {
             System.out.println("Error writing borrowed.txt");
+        }
+
+        try (FileWriter writer = new FileWriter("borrowed_history.txt", true)) {
+            writer.write(selectedBook.getUUID() + "," + currentUser.getUUID() + "\n");
+        } catch (IOException e) {
+            System.out.println("Error writing borrowed_history.txt");
         }
 
         System.out.println("Book borrowed: " + selectedBook.getName());
@@ -299,19 +325,6 @@ public class App {
         }
     }
 
-    private static void listBooks() {
-        // Loop through list and finds book through pattern matching
-        java.util.Iterator<BookObject> iterator = books.iterator();
-        while (iterator.hasNext()) {
-            BookObject iBook = iterator.next();
-            String bookName = iBook.getName();
-            String bookAuthor = iBook.getAuthor();
-            String bookSubject = iBook.getSubject();
-
-            System.out.println("Book: " + bookName + " by " + bookAuthor + ", subject " + bookSubject);
-        }
-    }
-
     private static void addBook() {
         // Get book details
         System.out.println("\nEnter book name: ");
@@ -353,6 +366,16 @@ public class App {
 
         // Add books to list
         books.add(book);
+    }
+
+    private static void bookHistory() {
+        for (UserObject user : users) {
+            List<BookObject> books = user.getBorrowedHistorBooks();
+            for (BookObject book : books) {
+                System.out.println(book.getName() + " by " + book.getAuthor());
+            }
+            
+        }
     }
 
     private static void returnBook() {
@@ -407,12 +430,14 @@ class UserObject {
     private String password;
     private String uuidString;
     private List<BookObject> borrowedBooks;
+    private List<BookObject> borrowedHistoryBooks;
 
-    public UserObject(String username, String password, String uuidString, List<BookObject> borrowedBooks) {
+    public UserObject(String username, String password, String uuidString, List<BookObject> borrowedBooks, List<BookObject> borrowedHistoryBooks) {
         this.username = username;
         this.password = password;
         this.uuidString = uuidString;
         this.borrowedBooks = new ArrayList<>();
+        this.borrowedHistoryBooks = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -431,12 +456,20 @@ class UserObject {
         return borrowedBooks;
     }
 
+    public List<BookObject> getBorrowedHistorBooks() {
+        return borrowedHistoryBooks;
+    }
+
     public void addBorrowedBook(BookObject book) {
         this.borrowedBooks.add(book);
     }
 
     public void removeBorrowedBook(BookObject book) {
         this.borrowedBooks.remove(book);
+    }
+
+    public void addBorrowedHistoryBook(BookObject book) {
+        this.borrowedHistoryBooks.add(book);
     }
 }
 
