@@ -312,39 +312,6 @@ public class App {
         }
     }
 
-    private static void deleteBook() {
-        // Get info
-        System.out.println("Enter a book name to delete."); 
-        String dName = sc.nextLine();
-                
-        // Pattern searching
-        Pattern deletePattern = Pattern.compile("\\b" + dName + "\\b", Pattern.CASE_INSENSITIVE);
-                
-        // For if statements
-        boolean dFound = false;
-
-        // Loop through list and finds book through pattern matching
-        java.util.Iterator<BookObject> iterator = books.iterator();
-        while (iterator.hasNext()) {
-            BookObject iBook = iterator.next();
-            String bookName = iBook.getName();
-            String bookAuthor = iBook.getAuthor();
-            String bookSubject = iBook.getSubject();
-
-            Matcher deleteMatcher = deletePattern.matcher(bookName);
-            while (deleteMatcher.find()) {
-                System.out.println("Deleting book: " + deleteMatcher.group() + " by " + bookAuthor + ", subject " + bookSubject);
-                iterator.remove();
-                dFound = true;
-            }
-        }
-
-        // Handles invalid or wrong input
-        if (!dFound) {
-            System.out.println("No matching book found for deletion.");
-        }
-    }
-
     private static void addBook() {
         // Get book details
         System.out.println("\nEnter book name: ");
@@ -389,45 +356,42 @@ public class App {
     }
 
     private static void returnBook() {
-        String selectedBookInfo;
-        if (selectedBook != null) {
-            selectedBookInfo = selectedBook.getName() + " by " + selectedBook.getAuthor();
-        } else {
-            selectedBookInfo = "None";
+        if (selectedBook == null) {
+            System.out.println("Select a book first.");
+            return;
+        }
+        if (!selectedBook.getBorrowed()) {
+            System.out.println("Book is not being borrowed.");
+            return;
         }
 
-        System.out.println("\nChoose a menu option:");
-        System.out.println("[1] Search book");
-        System.out.println("[2] List books");
-        System.out.println("[3] Return selected book");
-        System.out.println("Selected book: " + selectedBookInfo);
-        System.out.print("> ");
-        Integer choice = getIntInput();
+        currentUser.removeBorrowedBook(selectedBook);
+        selectedBook.setBorrowed(false);
 
-        switch (choice) {
-            case 1:
-                searchBook();
-                break;
-            case 2:
-                listBooks();
-                break;
-            case 3:
-                if (selectedBook != null) {
-                    List<BookObject> borrowedBooks = currentUser.getBorrowedBooks();
-                    if (borrowedBooks.contains(selectedBook)) {
-                        currentUser.removeBorrowedBook(selectedBook);
-                        selectedBook.setBorrowed(false);
-                        System.out.println("Book returned: " + selectedBook.getBorrowed() + ", " + currentUser.getBorrowedBooks() + ", " + selectedBook);
-                    } else {
-                        System.out.println("Book is not being borrowed!");
-                    }
-                } else {
-                    System.out.println("No book selected!");
+        File borrowedFile = new File("borrowed.txt");
+        List<String> remaining = new ArrayList<>();
+
+        try (Scanner scanner = new Scanner(borrowedFile)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (!line.startsWith(selectedBook.getUUID() + ",")) {
+                    remaining.add(line);
                 }
-                break;
-            default:
-                System.out.println("Invalid choice or input!");
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading borrowed.txt");
+            return;
         }
+
+        try (FileWriter writer = new FileWriter("borrowed.txt", false)) {
+            for (String line : remaining) {
+                writer.write(line + "\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing borrowed.txt");
+        }
+
+        System.out.println("Book returned: " + selectedBook.getName());
     }
 
     private static boolean exitProgram() {
